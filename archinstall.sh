@@ -267,7 +267,7 @@ install_packages() {
     local packages=''
 
     #  Utilidades gerais / bibliotecas
-    packages+=' alsa-utils aspell-en chromium cpupower gvim mlocate net-tools ntp openssh p7zip pkgfile powertop python python2 rfkill rsync sudo unrar unzip wget zip systemd-sysvcompat zsh grml-zsh-config'
+    packages+=' vim mlocate net-tools ntp openssh p7zip pkgfile powertop python python2 rfkill rsync sudo unrar unzip wget zip systemd-sysvcompat zsh grml-zsh-config'
 
     # Pacotes de desenvolvimento
     packages+=' apache-ant cmake gdb git maven mercurial subversion tcpdump valgrind wireshark-gtk'
@@ -319,31 +319,31 @@ install_packages() {
         packages+=' xf86-video-vesa'
     fi
 
-    sudo pacman -Sy --noconfirm $packages
+    pacman -Sy --noconfirm $packages
 }
 
-install_yay() {
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si
+#install_yay() {
+ #  git clone https://aur.archlinux.org/yay.git
+ #  cd yay
+ #  makepkg -si
     
-}
+#}
 
-install_aur_packages() {
-    mkdir /foo
-    export TMPDIR=/foo
-    yay -S --noconfirm chromium
-    unset TMPDIR
-    rm -rf /foo
-}
+#install_aur_packages() {
+#    mkdir /foo
+#    export TMPDIR=/foo
+#    yay -S --noconfirm chromium
+#    unset TMPDIR
+#    rm -rf /foo
+#}
 
-clean_packages() {
-    yes | pacman -Scc
-}
+#clean_packages() {
+#    yes | pacman -Scc
+#}
 
-update_pkgfile() {
-    pkgfile -u
-}
+#update_pkgfile() {
+#    pkgfile -u
+#}
 
 set_hostname() {
     local hostname="$1"; shift
