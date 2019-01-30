@@ -38,7 +38,7 @@ KEYMAP='pt_BR'
 
 # Escolha seu driver de vídeo
 # Para Intel
-VIDEO_DRIVER="i915"
+#VIDEO_DRIVER="i915"
 # Para nVidia
 #VIDEO_DRIVER="nouveau"
 # Para ATI
@@ -156,8 +156,8 @@ configure() {
     echo 'Configurando o sudo'
     set_sudoers
 
-    echo 'Configurando o slim'
-    set_slim
+    #echo 'Configurando o slim'
+    #set_slim
 
     if [ -n "$WIRELESS_DEVICE" ]
     then
@@ -219,8 +219,8 @@ setup_lvm() {
     pvcreate "$partition"
     vgcreate "$volgroup" "$partition"
 
-    #  Crie uma partição swap de 1GB
-    lvcreate -C y -L1G "$volgroup" -n swap
+    #  Crie uma partição swap de 4GB
+    lvcreate -C y -L 4G "$volgroup" -n swap
 
     # Use o resto do espaço para root
     lvcreate -l '+100%FREE' "$volgroup" -n root
@@ -288,8 +288,8 @@ unmount_filesystems() {
 #    # Programas Misc
 #    packages+=' mplayer pidgin vlc xscreensaver gparted dosfstools ntfsprogs'
 #
-    # Xserver
-    packages+=' xorg-apps xorg-server xorg-xinit xterm'
+#    # Xserver
+#    packages+=' xorg-apps xorg-server xorg-xinit xterm'
 #
 #    # Slim gerenciador de login
 #    packages+=' slim archlinux-themes-slim'
@@ -297,11 +297,11 @@ unmount_filesystems() {
 #    # Fontes
 #    packages+=' ttf-dejavu ttf-liberation'
 #
-    # Processadores Intel
-    packages+=' intel-ucode'
+#    # Processadores Intel
+#    packages+=' intel-ucode'
 #
-    # Para laptops
-    packages+=' xf86-input-synaptics'
+#    # Para laptops
+#    packages+=' xf86-input-synaptics'
 #
 #    # Pacotes extras para o tablet tc4200
 #    # packages + = 'ipw2200-fw xf86-input-wacom'
