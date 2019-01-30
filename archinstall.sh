@@ -1,5 +1,6 @@
 !/bin/bash
 encoding: utf-8
+## https://github.com/mgvl/archlinux.git
 
 # # CONFIGURE ESTAS VARIÁVEIS
 # # VEJA TAMBÉM A FUNÇÃO install_packages PARA VER O QUE É REALMENTE INSTALADO
@@ -110,17 +111,17 @@ configure() {
     echo 'Instalando pacotes adicionais'
     install_packages
 
-    echo 'Instalando yay'
-    install_yay
+    #echo 'Instalando yay'
+    #install_yay
 
-    echo 'Instalando pacotes AUR'
-    install_aur_packages
+    #echo 'Instalando pacotes AUR'
+    #install_aur_packages
 
-    echo 'Limpando tarballs do pacote'
-    clean_packages
+    #echo 'Limpando tarballs do pacote'
+    #clean_packages
 
-    echo 'Atualizando o banco de dados pkgfile'
-    update_pkgfile
+    #echo 'Atualizando o banco de dados pkgfile'
+    #update_pkgfile
 
     echo 'Configurando hostname'
     set_hostname "$HOSTNAME"
@@ -263,48 +264,48 @@ unmount_filesystems() {
     fi
 }
 
-install_packages() {
-    local packages=''
-
-    #  Utilidades gerais / bibliotecas
-    packages+=' alsa-utils aspell-en chromium cpupower gvim mlocate net-tools ntp openssh p7zip pkgfile powertop python python2 rfkill rsync sudo unrar unzip wget zip systemd-sysvcompat zsh grml-zsh-config'
-
-    # Pacotes de desenvolvimento
-    packages+=' apache-ant cmake gdb git maven mercurial subversion tcpdump valgrind wireshark-gtk'
-
-    # Netcfg
-    if [ -n "$WIRELESS_DEVICE" ]
-    then
-        packages+=' netcfg ifplugd dialog wireless_tools wpa_actiond wpa_supplicant'
-    fi
-
-    # Java 
-    packages+=' icedtea-web-java7 jdk7-openjdk jre7-openjdk'
-
-    # Libreoffice
-    packages+=' libreoffice-calc libreoffice-en-US libreoffice-gnome libreoffice-impress libreoffice-writer hunspell-en hyphen-en mythes-en'
-
-    # Programas Misc
-    packages+=' mplayer pidgin vlc xscreensaver gparted dosfstools ntfsprogs'
-
+#install_packages() {
+#  #  local packages=''
+#
+#    #  Utilidades gerais / bibliotecas
+#    packages+=' alsa-utils aspell-en chromium cpupower gvim mlocate net-tools ntp openssh p7zip pkgfile powertop python python2 rfkill rsync sudo unrar unzip wget zip systemd-sysvcompat zsh grml-zsh-config'
+#
+#    # Pacotes de desenvolvimento
+#    packages+=' apache-ant cmake gdb git maven mercurial subversion tcpdump valgrind wireshark-gtk'
+#
+#    # Netcfg
+#    if [ -n "$WIRELESS_DEVICE" ]
+#    then
+#       packages+=' netcfg ifplugd dialog wireless_tools wpa_actiond wpa_supplicant'
+#    fi
+#
+#    # Java 
+#    packages+=' icedtea-web-java7 jdk7-openjdk jre7-openjdk'
+#
+#    # Libreoffice
+#    #packages+=' libreoffice-calc libreoffice-en-US libreoffice-gnome libreoffice-impress libreoffice-writer hunspell-en hyphen-en mythes-en'
+#
+#    # Programas Misc
+#    packages+=' mplayer pidgin vlc xscreensaver gparted dosfstools ntfsprogs'
+#
     # Xserver
     packages+=' xorg-apps xorg-server xorg-xinit xterm'
-
-    # Slim gerenciador de login
-    packages+=' slim archlinux-themes-slim'
-
-    # Fontes
-    packages+=' ttf-dejavu ttf-liberation'
-
+#
+#    # Slim gerenciador de login
+#    packages+=' slim archlinux-themes-slim'
+#
+#    # Fontes
+#    packages+=' ttf-dejavu ttf-liberation'
+#
     # Processadores Intel
     packages+=' intel-ucode'
-
+#
     # Para laptops
     packages+=' xf86-input-synaptics'
-
-    # Pacotes extras para o tablet tc4200
-    # packages + = 'ipw2200-fw xf86-input-wacom'
-
+#
+#    # Pacotes extras para o tablet tc4200
+#    # packages + = 'ipw2200-fw xf86-input-wacom'
+#
     if [ "$VIDEO_DRIVER" = "i915" ]
     then
         packages+=' xf86-video-intel libva-intel-driver'
@@ -319,31 +320,31 @@ install_packages() {
         packages+=' xf86-video-vesa'
     fi
 
-    pacman -Sy --noconfirm $packages
-}
+#    pacman -Sy --noconfirm $packages
+#}
 
-install_yay() {
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si
-    
-}
+#install_yay() {
+#    git clone https://aur.archlinux.org/yay.git
+#    cd yay
+#    makepkg -si
+#    
+#}
 
-install_aur_packages() {
-    mkdir /foo
-    export TMPDIR=/foo
-    yay -S --noconfirm chromium
-    unset TMPDIR
-    rm -rf /foo
-}
+#install_aur_packages() {
+#    mkdir /foo
+#    export TMPDIR=/foo
+#    yay -S --noconfirm chromium
+#    unset TMPDIR
+#    rm -rf /foo
+#}
 
-clean_packages() {
-    yes | pacman -Scc
-}
+#clean_packages() {
+#    yes | pacman -Scc
+#}
 
-update_pkgfile() {
-    pkgfile -u
-}
+#update_pkgfile() {
+#    pkgfile -u
+#}
 
 set_hostname() {
     local hostname="$1"; shift
