@@ -10,13 +10,18 @@ Instalação Simples do Archlinux
 	
 	2- Em seguida, configure uma senha de root que é necessária para uma conexão SSH, já que a senha padrão do Arch para root é vazia
 
+ #configure uma senha de root 
+  passwd root
+  
  #instale o sshd e habilite em seguida
+  pacman -Sy openssh
+  systemctl start sshd.service
 
- 	pacman -Sy openssh
-	systemctl start sshd.service
+ #Não esqueça de verificar o ip da maquina que você acessar pelo putty 
+ # verificar o ip 
+ ip a sh
 
  #Agora so abrir o putty em outra maquina e seguir passos
-
 -------------------------------------------------------------------------
 #Configure temporariamente o seu teclado
  loadkeys br‐abnt2
