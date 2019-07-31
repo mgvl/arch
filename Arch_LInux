@@ -29,13 +29,11 @@ Instalação Simples do Archlinux
  #Liste os discos de sua máquina e identifique seu disco de instalação
  lsblk
  
+ #Esquema de particionamento
 
-
- Esquema de particionamento
-
- Partição 1: /boot (100Mb, ext2)
- Partição 2: swap (128Mb, swap))
- Partição 3: /home (1Gb, ext4)
+ Partição 1: /boot (200Mb, ext2)
+ Partição 2: swap (4Gb, swap))
+ Partição 3: /home (80Gb, ext4)
  Partição 4: / (Restante do disco, ext4)
 
 #Liste as Partiçoes
