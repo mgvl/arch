@@ -1,1 +1,214 @@
+Instalação Simples do Archlinux 
 
+ #Passos de Instalação
+ #Efetue o boot de sua máquina virtual com a Live CD do Archlinux
+
+
+#Você pode utilizar o putty para auxiliar na instalação 
+
+	1- Inicie a máquina destino em um ambiente Arch live por meio de uma imagem CD/USB Live: isso vai autenticar o usuário como root.
+	
+	2- Em seguida, configure uma senha de root que é necessária para uma conexão SSH, já que a senha padrão do Arch para root é vazia
+
+ #instale o sshd e habilite em seguida
+
+ 	pacman -Sy openssh
+	systemctl start sshd.service
+
+ #Agora so abrir o putty em outra maquina e seguir passos
+
+-------------------------------------------------------------------------
+#Configure temporariamente o seu teclado
+ loadkeys br‐abnt2
+ 
+ #Liste os discos de sua máquina e identifique seu disco de instalação
+ lsblk
+ 
+
+
+ Esquema de particionamento
+
+ Partição 1: /boot (100Mb, ext2)
+ Partição 2: swap (128Mb, swap))
+ Partição 3: /home (1Gb, ext4)
+ Partição 4: / (Restante do disco, ext4)
+
+#Liste as Partiçoes
+ fdisk ‐l /dev/sda
+
+
+criar partiçoes:
+	cfdisk /dev/sda
+
+# ou use o fdisk para criar 
+	fdisk /dev/sda
+
+-----------------------------------
+#Comandos do fdisk 
+ p: Imprime a tabela de partições
+ n: Cria nova partição
+ w: Grava tabela de partições
+ t: Troca o ID do tipo de partição (por exemplo 0x82 para partições swap)
+
+ Partição de boot
+ Partição para swap
+ Partição para /home
+ Partição para /
+---------------------------------
+
+#Checando partições criadas
+ fdisk ‐l /dev/sda
+
+#Formatando as partições
+ mkfs ‐t ext2 /dev/sda1
+ mkfs ‐t ext4 /dev/sda3
+ mkfs ‐t ext4 /dev/sda4
+ mkswap /dev/sda2
+
+# Ativando partição swap
+ swapon /dev/sda2
+ free
+
+# Montando as partições
+ mount /dev/sda4 /mnt
+ mkdir /mnt/boot
+ mount /dev/sda1 /mnt/boot
+ mkdir /mnt/home
+ mount /dev/sda3 /mnt/home
+
+# Selecionando os espelhos para baixar os pacotes (Brazil em primeiro lugar)
+ nano /etc/pacman.d/mirrorlist
+
+# Instalando o sistema base (Relaxe! Vai demorar!)
+ pacstrap /mnt base
+
+# Configurando a tabela de pontos de montagem do novo sistema
+ genfstab ‐U ‐p /mnt >> /mnt/etc/fstab
+
+# Acessando o novo sistema
+ arch‐chroot /mnt
+
+# Instale o gerenciador de boot
+
+ pacman -S grub-bios
+ grub-install --target=i386-pc --recheck /dev/sda
+ cp /usr/share/locale/en\@quot/LC_MESSAGES/grub.mo /boot/grub/locale/en.mo
+
+#criar o arquivo de configuracao do grub
+ grub-mkconfig -o /boot/grub/grub.cfg
+
+#sair do arch-chroot
+ exit
+
+# Desmonte as partições e desligue sua máquina.
+ umount ‐R /mnt
+
+ Desliga o sistema 
+# poweroff
+
+
+##################################################################################################
+
+
+
+CONFIGURAÇÃO
+
+#Criar Um Usuario
+ useradd -m -g users -G adm,systemd-journal,wheel,rfkill,games,power,optical,storage,scanner,lp,audio,video -s /bin/bash username
+ passwd username
+
+#muda a linguagem para portugues br
+ nano /etc/locale.gen
+
+#descomentar essas linhas:
+ pt_BR.UTF-8 UTF-8
+ pt_BR.ISO 8959-2
+
+#executar esse comando:
+ locale-gen
+
+#criar o aquirvo de conf de lingua
+
+ echo LANG=pt_BR.UTF-8 >> /etc/locale.conf
+ export LANG=pt_BR.UTF-8
+
+#setando configuracoes de teclado para que persistam pos reboot
+ nano /etc/vconsole.conf
+
+#adiciona essas linhas no arquivo e salva
+ KEYMAP=br-abnt2
+ FONT=Lat2-Terminus16
+ FONT_MAP=
+
+#setando fuso horario
+ ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+
+#sincronizando o relogio de hardware com o do sistema
+ hwclock --systohc --utc
+
+#Mudar o hostneme da Maquina
+sudo hostnamectl set-hostname "nome"
+
+#instalando o xorg 
+ pacman -S xf86-input-libinput xorg-server xorg-xinit xorg-server-utils mesa
+
+#instalar driver de video = lspci (exibe qual e a placa de video)
+ pacman -S xf86-video-intel lib32-intel-dri lib32-mesa lib32-libgl
+
+
+#Interface grafica XFCE
+ sudo pacman -S xfce4 xfce4-goodies gamin firefox
+
+ cp /etc/X11/xinit/xinitrc ~/.xinitrc
+
+ nano ~/.xinitrc (comentar exec xterm ... add exec startxfce4)
+
+ startx 
+
+#Instalar o pacote xdg-user-dirs para adicionar pastas no /home:
+ sudo pacman -S xdg-user-dirs
+
+ #Depois basta rodar o seguinte comando no terminal:
+ xdg-user-dirs-update
+
+ #configurar teclado abnt2 no ambiente X:
+ localectl set-x11-keymap br abnt2
+
+# instalar Gerenciador de Login slim
+ sudo pacman -S slim slim-themes archlinux-themes-slim
+
+ #Habilitar na inicializacao
+ sudo systemctl enable slim.service
+
+ #Trocar Tema de inicializa;áo 
+ sudo nano /etc/slim.conf (tema do arch archlinux-simplyblack)
+
+
+# Gerenciador de touchpad, teclado, mouse
+ pacman -S xf86-input-synaptics xf86-input-mouse xf86-input-keyboard
+
+#pacotes para internet
+ pacman -S wireless_tools wpa_supplicant wpa_actiond dialog networkmanager network-manager-applet 
+wireless_tools wpa_supplicant wpa_actiond
+  
+ #Habilitar  NetworkManager
+  sudo systemctl enable NetworkManager
+  sudo systemctl start NetworkManager
+ 
+
+
+Opçonais Extras :
+
+sudo pacman -S gparted gimp vlc lib32-alsa-plugins ffmpeg steam simplescreenrecorder guvcview ttf-liberation tar rsync unrar zip unzip p7zip file-roller chromium pulseaudio pulseaudio-alsa pavucontrol alsa-firmware alsa-utils a52dec faac faad2 flac jasper lame libdca libdv libmad libmpeg2 libtheora libvorbis libxv wavpack x264 xvidcore gstreamer gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gvfs gvfs-afc gvfs-gphoto2 gvfs-mtp gvfs-nfs gvfs-smb firefox firefox-i18n-pt-br flashplugin unzip unrar p7zip mlocate remmina freerdp archlinux-wallpaper archlinux-themes-slim sudo
+
+
+#Instalar Repositorio YAY 
+
+	sudo pacman -S git
+	git clone https://aur.archlinux.org/yay.git
+	cd yay
+	makepkg -si
+	yay -Syu --noconfirm
+
+#Reinicie o sistema 
+reboot
